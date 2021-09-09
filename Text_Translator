@@ -1,0 +1,103 @@
+from tkinter import *
+from tkinter.ttk import Combobox
+# from tkinter.ttk import *
+from tkinter import messagebox as tmsg
+from textblob import TextBlob
+
+lan_dict={'afrikaans': 'af', 'albanian': 'sq', 'amharic': 'am', 'arabic': 'ar', 'armenian': 'hy', 'azerbaijani': 'az', 'basque': 'eu', 'belarusian': 'be', 'bengali': 'bn', 'bosnian': 'bs', 'bulgarian': 'bg', 'catalan': 'ca', 'cebuano': 'ceb', 'chichewa': 'ny', 'chinese (simplified)': 'zh-cn', 'chinese (traditional)': 'zh-tw', 'corsican': 'co', 'croatian': 'hr', 'czech': 'cs', 'danish': 'da', 'dutch': 'nl', 'english': 'en', 'esperanto': 'eo', 'estonian': 'et', 'filipino': 'tl', 'finnish': 'fi', 'french': 'fr', 'frisian': 'fy', 'galician': 'gl', 'georgian': 'ka', 'german': 'de', 'greek': 'el', 'gujarati': 'gu', 'haitian creole': 'ht', 'hausa': 'ha', 'hawaiian': 'haw', 'hebrew': 'he', 'hindi': 'hi', 'hmong': 'hmn', 'hungarian': 'hu', 'icelandic': 'is', 'igbo': 'ig', 'indonesian': 'id', 'irish': 'ga', 'italian': 'it', 'japanese': 'ja', 'javanese': 'jw', 'kannada': 'kn', 'kazakh': 'kk', 'khmer': 'km', 'korean': 'ko', 'kurdish (kurmanji)': 'ku', 'kyrgyz': 'ky', 'lao': 'lo', 'latin': 'la', 'latvian': 'lv', 'lithuanian': 'lt', 'luxembourgish': 'lb', 'macedonian': 'mk', 'malagasy': 'mg', 'malay': 'ms', 'malayalam': 'ml', 'maltese': 'mt', 'maori': 'mi', 'marathi': 'mr', 'mongolian': 'mn', 'myanmar (burmese)': 'my', 'nepali': 'ne', 'norwegian': 'no', 'odia': 'or', 'pashto': 'ps', 'persian': 'fa', 'polish': 'pl', 'portuguese': 'pt', 'punjabi': 'pa', 'romanian': 'ro', 'russian': 'ru', 'samoan': 'sm', 'scots gaelic': 'gd', 'serbian': 'sr', 'sesotho': 'st', 'shona': 'sn', 'sindhi': 'sd', 'sinhala': 'si', 'slovak': 'sk', 'slovenian': 'sl', 'somali': 'so', 'spanish': 'es', 'sundanese': 'su', 'swahili': 'sw', 'swedish': 'sv', 'tajik': 'tg', 'tamil': 'ta', 'telugu': 'te', 'thai': 'th', 'turkish': 'tr', 'ukrainian': 'uk', 'urdu': 'ur', 'uyghur': 'ug', 'uzbek': 'uz', 'vietnamese': 'vi', 'welsh': 'cy', 'xhosa': 'xh', 'yiddish': 'yi', 'yoruba': 'yo', 'zulu': 'zu'}
+
+
+def Click():
+    try:
+        word=TextBlob(varname1.get())
+        lan=word.detect_language()
+        lan_from_dic=languages.get()
+        lan_to=lan_dict[lan_from_dic]
+        word=word.translate(from_lang=lan,to=lan_to)
+        varname2.set(word)
+    except:
+        print("Network Error:\n"
+              "Please try again")
+        varname2.set("Network Error:\n"
+                    "Please try again")
+
+def exitingCode():
+    gg=tmsg.askyesnocancel('Notification','Do you want to exit ?')
+    if gg==True:
+        root.destroy()
+
+def Submit():
+    tmsg.showinfo('Review',"Thanks for reveiwing")
+
+def on_enter_entry1(e):
+    entry1['bg']='springgreen'
+
+def on_leave_entry1(e):
+    entry1['bg']='white'
+
+def on_enter_entry2(e):
+    entry2['bg'] = 'springgreen'
+
+def on_leave_entry2(e):
+    entry2['bg'] = 'white'
+
+
+root=Tk()
+root.geometry("700x550")
+root.title("Gupta's Translator")
+root.iconbitmap('translating.png')
+root.resizable(False,False)
+root.config(bg="turquoise1")
+
+
+languages=StringVar()
+lan_Box=Combobox(root, width=18,textvariable=languages,state="readonly",font=("times",15,"bold"))
+lan_Box['values']=[i for i in lan_dict.keys()]
+lan_Box.current(37)
+lan_Box.place(x=500,y=0)
+
+
+label0=Label(root,text="Enter the language here you want to convert your text in : ",font=("times",14,"bold"),bg="turquoise1").place(x=20,y=0)
+label1=Label(root,text="Enter Word : ",font=("times",15,"bold"),bg="turquoise1").place(x=20,y=100)
+label2=Label(root,text="Translated : ",font=("times",15,"bold"),bg="turquoise1").place(x=20,y=175)
+label3=Label(root,text="Hope You liked my translator : ",font=("times",15,"bold"),bg="turquoise1").place(x=20,y=360)
+
+varname1=StringVar()
+varname2=StringVar()
+entry1=Entry(root,width=30,bg="white",textvariable=varname1,font=("times",15,"bold"))
+entry1.place(x=180,y=100)
+entry1.bind('<Enter>',on_enter_entry1)
+entry1.bind('<Leave>',on_leave_entry1)
+entry2=Entry(root,width=30,bg="white",textvariable=varname2,font=("times",15,"bold"))
+entry2.place(x=180,y=175)
+entry2.bind('<Enter>',on_enter_entry2)
+entry2.bind('<Leave>',on_leave_entry2)
+
+image1=PhotoImage(file='loupe.png').subsample(19,19)
+image2=PhotoImage(file='logout.png').subsample(19,19)
+
+
+button1=Button(root,text="Search",bg="yellow",bd=10,width=150,command=Click,image=image1,compound=RIGHT,activebackground='red',font=("times",15,"bold"))
+button1.place(x=30, y=250)
+button1.bind('<Return>',Click)
+button2=Button(root,text="Exit",bg="yellow",bd=8,width=150,command=exitingCode,image=image2,compound=RIGHT,font=("times",15,"bold")).place(x=500, y=470)
+button3=Button(root,text="Submit",bg="yellow",bd=8,width=12,command=Submit,font=("times",15,"bold")).place(x=30, y=450)
+
+
+
+var=IntVar()
+var.set("Radio")
+radio=Radiobutton(root,text='Yes',variable=var,value=1)
+radio.place(x=20,y=400)
+radio=Radiobutton(root,text='No',variable=var,value=2)
+radio.place(x=100,y=400)
+
+
+statusvar=StringVar()
+statusvar.set("Phone : 8059761951")
+statusvar.set("Gurv Gupta")
+sbar=Label(root,textvariable=statusvar,relief=SUNKEN,font=("times",12,"bold"),anchor='n',bg='light grey')
+sbar.pack(fill=X,side=BOTTOM)
+
+
+root.mainloop()
